@@ -26,10 +26,13 @@ def rasterize(f, draw, X1, Y1, W, H, max_level=100):
         pts = map(lambda xy:tuple(map(float,xy.split(','))),p.getAttribute('points').split())
         draw.polygon(map(trans,pts),fill=parse_color(p.getAttribute('fill')))
     #for c in dom.getElementsByTagName('call'):
-        # Bob : ce cas va être difficile !
+        # Bob : je ne sais toujours pas gérer ça
 
 def main():
     global w,h
+    if len(sys.argv)!=5:
+        print >> sys.stderr, 'usage:', sys.argv[0], 'in.vins width height out.png'
+        sys.exit(1)
     w,h = int(sys.argv[2]), int(sys.argv[3])
     img = Image.new('RGB',(w,h))
     draw = ImageDraw.Draw(img)
