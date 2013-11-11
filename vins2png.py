@@ -25,9 +25,16 @@ def rasterize(f, draw, X1, Y1, W, H, max_level=100):
     for p in dom.getElementsByTagName('polygon'):
         pts = map(lambda xy:tuple(map(float,xy.split(','))),p.getAttribute('points').split())
         draw.polygon(map(trans,pts),fill=parse_color(p.getAttribute('fill')))
-    #for c in dom.getElementsByTagName('call'):
-        # Bob : ce cas va être difficile !
-
+    for c in dom.getElementsByTagName('call'):
+        target = c.getAttribute('target')
+        if target=='self':
+            target = f
+        x,y,ww,hh = map(float,[c.getAttribute('x'),c.getAttribute('y'),c.getAttribute('width'),c.getAttribute('height')])
+        XX,YY = trans((x,y))
+        WW,HH = W*ww/w,H*hh/h
+        call_seuil = 4
+        if abs(WW)>call_seuil and abs(HH)>call_seuil and max_level>0:
+            rasterize(target,draw,XX,YY,WW,HH,max_level-1)
 def main():
     global w,h
     w,h = int(sys.argv[2]), int(sys.argv[3])
